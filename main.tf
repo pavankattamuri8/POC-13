@@ -12,9 +12,9 @@ resource "aws_eks_cluster" "poc" {
   vpc_config {
     subnet_ids = [
     
-  "subnet-0d2c14c66f6530651",
-  "subnet-03dd3ff00040da7ff",
-  "subnet-04816d32cf91f4879"
+  "subnet-0f91618dbecad7449",
+  "subnet-0b2c0c8a0af402202",
+  "subnet-07c0ef75bcc4e0f9b"
 ]
 
   }
