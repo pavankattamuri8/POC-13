@@ -21,39 +21,45 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                sh '''
-                terraform init
-                terraform apply -auto-approve
-                '''
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh '''
+                    terraform init
+                    terraform apply -auto-approve
+                    '''
+                }
             }
         }
 
         stage('Configure kubectl') {
             steps {
-                sh '''
-                aws eks update-kubeconfig \
-                --region $AWS_REGION \
-                --name $CLUSTER_NAME
-                '''
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh '''
+                    aws eks update-kubeconfig \
+                        --region $AWS_REGION \
+                        --name $CLUSTER_NAME
+
+                    kubectl get nodes
+                    '''
+                }
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-               
-                     sh '''
-                            export AWS_REGION=us-east-1
-                    
-                            aws sts get-caller-identity
-                    
-                            aws eks update-kubeconfig --region $AWS_REGION --name poc-cluster
-                    
-                            kubectl get nodes
-                    
-                            kubectl apply -f k8s-deploy.yaml
-                            '''
-
-
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds'
+                ]]) {
+                    sh '''
+                    kubectl apply -f k8s-deploy.yaml
+                    '''
+                }
             }
         }
 
@@ -67,7 +73,7 @@ pipeline {
                   LB_URL=$(kubectl get svc $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
                   if [ ! -z "$LB_URL" ]; then
-                    echo "LoadBalancer Found!"
+                    echo "✅ LoadBalancer Found!"
                     echo "Application URL: http://$LB_URL"
                     echo "Final URL: http://$LB_URL/index.html"
                     exit 0
@@ -77,7 +83,7 @@ pipeline {
                   sleep 10
                 done
 
-                echo "ERROR: LoadBalancer not ready"
+                echo "❌ ERROR: LoadBalancer not ready"
                 exit 1
                 '''
             }
