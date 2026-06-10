@@ -40,9 +40,12 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                sh '''
-                kubectl apply -f k8s-deploy.yaml
-                '''
+               
+                     sh '''
+                            aws eks update-kubeconfig --region us-east-1 --name poc-cluster
+                            kubectl apply -f k8s-deploy.yaml
+                            '''
+
             }
         }
 
