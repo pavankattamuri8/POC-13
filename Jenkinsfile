@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CLUSTER_NAME = "poc-cluster"
-        AWS_REGION   = "us-east-1"
+        AWS_REGION   = "ap-south-1"
         SERVICE_NAME = "html-service"
     }
 
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Nagendrakumarredd/POC-13.git'
+                git branch: 'main', url: 'https://github.com/pavankattamuri8/POC-13.git'
             }
         }
 
