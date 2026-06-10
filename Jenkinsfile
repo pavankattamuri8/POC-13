@@ -20,13 +20,23 @@ pipeline {
         }
 
         stage('Terraform Apply') {
-            steps {
-                sh '''
-                terraform init
-                terraform apply -auto-approve
-                '''
-            }
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'aws-creds',
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
+            sh '''
+            export AWS_DEFAULT_REGION=us-east-1
+ 
+            aws sts get-caller-identity
+ 
+            terraform init
+            terraform apply -auto-approve
+            '''
         }
+    }
+}
 
         stage('Configure kubectl') {
             steps {
