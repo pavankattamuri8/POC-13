@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-south-1"
 }
 
 ############################
@@ -34,9 +34,9 @@ resource "aws_eks_cluster" "poc" {
 
   vpc_config {
     subnet_ids = [
-      "subnet-0f91618dbecad7449",
-      "subnet-0b2c0c8a0af402202",
-      "subnet-07c0ef75bcc4e0f9b"
+      "subnet-090e9a807b975b807",
+      "subnet-0c66dab8f1bfe1b3d",
+      "subnet-0d1e4c8ddce1a11b9"
     ]
   }
 
