@@ -27,7 +27,7 @@ pipeline {
             passwordVariable: 'AWS_SECRET_ACCESS_KEY'
         )]) {
             sh '''
-            export AWS_DEFAULT_REGION=us-east-1
+            export AWS_DEFAULT_REGION=ap-south-1
  
             aws sts get-caller-identity
  
